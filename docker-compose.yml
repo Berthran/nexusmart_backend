@@ -1,0 +1,62 @@
+# docker-compose.yml for NexusMart Development Environment
+
+# Specify the version of the Docker Compose file format. Version 3 is common.
+version: '3.8'
+
+# Defien the services (containers) that make up the application
+services:
+  # Service 1: The Django Applicaiton
+  web:
+    # Build the Docker image for this service using the Dockerfile in the current directory (.)
+    build:
+    # Command to execute when the container starts.
+    # This runs the Django development server, making it accessible outside the container on port 8000.
+    # '0.0.0.0' is important to allow connections from your host machine.
+    command: python manage.py runserver 0.0.0.0:8000
+    # Volumes mount the current directory (.) on your host machine to /app insided the container.
+    # This means change you make to your local code are immediately reflected inside the container,
+    # allowing for live reloading during development without rebuilding the image.
+    volumes:
+      - .:/app
+    # Ports map port 8000 on the host machine to port 8000 inside the container.
+    # This allows you to access the Django app via http://localhost:80000 in your browser.
+    ports:
+      - "8000:8000"
+    # Environment variables passed directly into the web container.
+    # These are used by Django's settings.py to connect to the database.
+    # IMPORTANT: Use environment variables for sensitive data like credentials.
+    environment:
+      - DB_NAME=nexusmart_db
+      - DB_USER=nexususer
+      - DB_PASSWORD=nexuspassword # Use a strong password in a real project, managed securely!
+      - DB_HOST=db # The hostname of the database service (defined below)
+      - DB_PORT=5432
+    # Specifies that the 'web' service depends on the 'db' service.
+    # Docker compose will start the 'db' service before starting the 'web' service.
+    # Note: This only ensures the db container *starts*, not that it's fully ready.
+    # We might need entrypoint scripts later for more robust waiting.
+    depends_on:
+      - db
+    
+  # Service 2: The PostgreSQL Database
+  db:
+    # Use the official PostgreSQL image from Docker Hub. Choose a specific version.
+    image: postgres:15
+    # Volumes mount a named volume 'postgres_data' to the directory where PostgreSQL stores its data inside the container.
+    # This ensures that your database data persistes even if the 'db' container is stopped or removed.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    # Environment variables required by the official PostgreSQL image to initialize the database.
+    # POSTGRES_DB: Specifies the name of the database to be created.
+    # POSTGRES_USER: Specifies the username for the database superuser.
+    # POSTGRES_PASSWORD: Specifies the password for the database superuser.
+    # These MUST match the DB_NAME, DB_USER, DB_PASSWORD used in the 'web' service environnment.
+    environment:
+      - POSTGRES_DB=nexusmart_db
+      - POSTGRES_USER=nexususer
+      - POSTGRES_PASSWORD=nexuspassword # Use the same password as before
+
+# Define names volumes used by the services.
+# Named volumes are managed by Docker and are the preferred way to persist data for containers.
+volumes:
+  postgres_data: # The data for the PostgresSQL database will be stored here.
