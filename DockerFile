@@ -24,7 +24,7 @@ RUN apt-get update \
 # --- Application Setup ---
 # Set the working directory inside the container. All subsequent comands (RUN, CMD, COPY, etc.)
 # will be executed relative to this directory
-WORKDIR /appear
+WORKDIR /app
 
 # --- Python Dependencies ---
 # Copy the requirements file into the container first.
