@@ -1,0 +1,20 @@
+# ---Core Frameworks ---
+# Django: The main web framework. Using version 5.0.x (a recent stable release).
+django>=5.0,<5.1
+# Django REST Framework: Toolkit for building Web APIs with Django.
+djangorestframework>=3.15,<3.16
+
+# --- Database Connector ---
+# Psycopg2: PostgreSQL adapter for Python.
+# The '-binary' version includes pre-compiled binaries, simplifying installation in Docker.
+psycopg2-binary>=2.9,<3.0
+
+# --- Environment Variable Management ---
+# Python-dotenv: Reads key-value pairs from a .env file and sets them as environment variables.
+# Useful for managing settings like database credentials, especially during development.
+python-dotenv>=1.0,<2.0
+
+# Add other dependencies below as needed, e.g.,
+# requests>=2.28,<3.0  # For making HTTP requests
+# celery>=5.3,<5.4     # For background tasks
+# redis>=5.0,<6.0      # If using Redis for caching or Celery broker

@@ -1,14 +1,14 @@
 # docker-compose.yml for NexusMart Development Environment
 
 # Specify the version of the Docker Compose file format. Version 3 is common.
-version: '3.8'
+# version: '3.8' the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
 
 # Defien the services (containers) that make up the application
 services:
   # Service 1: The Django Applicaiton
   web:
     # Build the Docker image for this service using the Dockerfile in the current directory (.)
-    build:
+    build: .
     # Command to execute when the container starts.
     # This runs the Django development server, making it accessible outside the container on port 8000.
     # '0.0.0.0' is important to allow connections from your host machine.

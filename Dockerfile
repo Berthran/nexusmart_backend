@@ -19,7 +19,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update \ 
     && apt-get install -y --no-install-recommends build-essential libpq-dev \
     && apt-get clean \
-    && rm -rf /var/;lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # --- Application Setup ---
 # Set the working directory inside the container. All subsequent comands (RUN, CMD, COPY, etc.)
