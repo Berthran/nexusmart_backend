@@ -1,55 +1,39 @@
-from rest_framework import generics # Import DRF's generic views
+# Import DRF's generic views
+from rest_framework import viewsets, permissions
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
 
 
 
-# --- Category Views ---
-
-class CategoryListAPIView(generics.ListAPIView):
+# --- Category Viewset ---
+class CategoryViewSet(viewsets.ModelViewSet):
     """
-    API view to list all categories.
-    User ListAPIView for read-only endpoint listing a quesryset
+    API endpoint that allows categories to be viewed or edited.
+    Provides list, create, retrieve, updata, partial_update, destroy actions automatically
     """
-    # queryset: Defines the initial set of objects this view will work with.
-    # Here, we get all Category objects.
-    queryset = Category.objects.all()
-    # serializer_class: specifies the serializer to use for converting the
-    # queryset objects into the response data format (JSON).
+    # queryset: Defines the set of objects this viewset will manage.
+    queryset = Category.objects.all().order_by('name') # Get all categories, ordered by name
+    # serializer_class: Specifies the serializer to use for this viewset.
     serializer_class = CategorySerializer
-    # Permission can be added later, e.g.:
-    # permission_classes = [permissions.AllowAny] # Default
+    # permission_classes: Define who can access this viewset.
+    # IsAuthenticatedOrReadOnly allows anyone to view (GET, HEAD, OPTIONS)
+    # but only authenticated users to perform write actions (POST, PUT, PATCH, DELETE).
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class CategoryDetailAPIView(generics.RetrieveAPIView):
+class ProductViewSet(viewsets.ModelViewSet):
     """
-    API view to retrieve a single category by its ID (pk)
-    Uses RetrieveAPIView for read-only endpoint for a single model instance.
+    API endpoint that allows products to be viewed or edited.
+    Provides list, create, retrieve, update, partial_update, destroy actions automatically.
     """
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    # DRF's RetrieveAPIView automatically hadles lookup by primary key ('pk')
-    # based on the URL configuration  (which we'll set up next).
-
-
-# --- Product Views ---
-class ProductListAPIView(generics.ListAPIView):
-    """
-    API view to list all available products.
-    """
-    queryset = Product.objects.filter(available=True)
+    # We only manage products that are marked as 'available'.
+    # Note: This applies to list, retrieve, update, delete. Consider if you want
+    # admins to manage unavailable products - might need custom queryset logic later.
+    queryset = Product.objects.filter(available=True).order_by('-created_at')
     serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-
-class ProductDetailAPIView(generics.RetrieveAPIView):
-    """
-    API view to retrieve a single available product by its ID (pk).
-    """
-    # Ensure we only retrieve products that are available.
-    queryset = Product.objects.filter(available=True)
-    serializer_class = ProductSerializer
-    # Like CategoryDetailAPIView, lookup by 'pk' is handled automatically.
-
+    # We can add custom actions, filtering, pagination etc. here later.
 # Note: We are currently only creating read-only views (List and Retrieve).
 # We will use other generic views (Create, Update, Destroy) or ViewSets later
 # to handle creating, updating, and deleting products/categories via the API.
