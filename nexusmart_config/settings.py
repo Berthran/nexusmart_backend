@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # Third party apps
     'rest_framework',
+    'django_filters',
 
     # nexusmart apps
     'users.apps.UsersConfig',
@@ -145,3 +146,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # IMPORTANT: This MUST be set before running 'makemigrations' for the first time
 # for the 'users' app or any app with a ForeignKey to the User model.
 AUTH_USER_MODEL =  'users.User'
+
+# --- Django REST Framework Settings ---
+
+REST_FRAMEWORK = {
+    # Set default filtering backend for all views/viewsets
+    'DEFAULT_FILTER_BACKEND': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+    # We can add other global settings here later, e.g., for pagination or authentication
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10
+}
