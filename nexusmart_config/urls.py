@@ -22,18 +22,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Include the URLs from the 'products' app under the 'api/v1' prefix
-    # All URLs defined in products.urls will now be accessible starting with /api/v1/
-    # e.g., /api/v1/products, /api/v1/categories/
+    # Remove the namespace argument as the router handles URL naming.
     path(
-        'api/v1/',  # The prefix for all URLs included from products.urls
-        include('products.urls', namespace='products') # Include URLs from products/urls.py
-        # The 'namespace' argument should match the 'app_name' defined in products.urls
-        # It helps in uniquely identifying URL names, e.g., 'products:product-list'
+        'api/v1/', # Prefix remains the same
+        include('products.urls') # Just include the module path
     ),
 
-    # We can add URLs for other apps (like users, orders) here later
-    # path('api/v1/users/', include('users.urls', namespace='users')),
+    # path('api/v1/users/', include('users.urls')), # Example for later
 ]
+
 
 # Add configurations for serving media files during development later if needed
 # from django.conf import settings
