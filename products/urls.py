@@ -1,37 +1,28 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
 
-#  Define an app name for namespacing. This helps avoid URL name collisions 
-#  betweenn different apps in the project. It allows us to refer to these URLs 
-#  like 'products:product-list'.
-app_name = 'products'
+# Create a router instance. DefaultRouter includes a default API root view.
+router = DefaultRouter()
 
-urlpatterns = [
-    # --- Category URLS ---
-    # URL for listing all categories
-    path(
-        'categories/', # The URL path fragment
-        views.CategoryListAPIView.as_view(), # The view calss to handle requests (use .as_view() for CBVs)
-        name='category-list' # A unique name to refer to this URL pattern later (e.g., in templates or tests)
-    ),
-    # URL for retrieving a single category bu its primary key (pk)
-    path(
-        'categories/<int:pk>/', # <int:pk> captures an integer from the URL and passes it as 'pk' to the view
-        views.CategoryDetailAPIView.as_view(),
-        name='category-detail'
-    ),
 
-    # --- Product URLs ---
-    # URL for listing all available products
-    path(
-        'products/',
-        views.ProductListAPIView.as_view(),
-        name='product-list'
-    ),
-    # URL for retrieving a single available product by its primary key (pk)
-    path(
-        'products/<int:pk>/',
-        views.ProductDetailAPIView.as_view(),
-        name='product-detail'
-    ),
-]
+# Register the viewsets with the router.
+# The router automatically generates URLs for standard actions (list, create, retrieve, update, etc.)
+# router.register(prefix, viewset, basename)
+#   prefix: The URL prefix for this viewset (e.g., 'categories')
+#   viewset: The ViewSet class
+#   basename: Used to generate URL names. Optional if 'queryset' is set on the viewset,
+#             but good practice to include for clarity. DRF will generate names like
+#             'category-list', 'category-detail', 'product-list', 'product-detail'.
+router.register(r'categories', views.CategoryViewSet, basename='category')
+router.register(r'products', views.ProductViewSet, basename='product')
+
+# The API URLs are now determined automatically by the router.
+# We no longer need the app_name definition here as the router handles naming.
+urlpatterns = router.urls
+
+# You could also include the router URLs within a list if you had other non-router paths:
+# urlpatterns = [
+#     path('', include(router.urls)),
+#     # path('some-other-path/', views.some_other_view, name='other'),
+# ]
