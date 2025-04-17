@@ -140,21 +140,38 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
+# --- Django REST Framework Settings ---
+
+REST_FRAMEWORK = {
+    # --- Default Filtering Settings ---
+    # Set default filtering backend for all views/viewsets
+    'DEFAULT_FILTER_BACKEND': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+
+    # --- Default Pagination Settings ---
+    # Sets the default pagination style for list views.
+    # PageNumberPagination allows clients to request pages using '?page=...' query parameter.
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+
+    # Sets the default number of items to include on each page.
+    # Clients can potentially override this with a 'page_size' query parameter if allowed.
+    'PAGE_SIZE': 10, # Show 10 items per page by default
+}
+
+# Optional: Configure Simple JWT settings (e.g., token lifetimes)
+# Keep defaults for now
+# SIMPLE_JWT = {
+#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+#     # ... other settings
+# }
+
 # --- Custom User Model Configuration ---
 # Tells Django to use the User model defined in the 'users' app
 # instead of the default django.contrib.auth.models.User.
 # IMPORTANT: This MUST be set before running 'makemigrations' for the first time
 # for the 'users' app or any app with a ForeignKey to the User model.
 AUTH_USER_MODEL =  'users.User'
-
-# --- Django REST Framework Settings ---
-
-REST_FRAMEWORK = {
-    # Set default filtering backend for all views/viewsets
-    'DEFAULT_FILTER_BACKEND': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
-    # We can add other global settings here later, e.g., for pagination or authentication
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    # 'PAGE_SIZE': 10
-}
