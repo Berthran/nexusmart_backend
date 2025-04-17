@@ -145,6 +145,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # --- Django REST Framework Settings ---
 
 REST_FRAMEWORK = {
+    # --- Default Authenticationi Classes ---
+    # Check for JWT first, then SessionAuth (for browsable API)
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+
+    # Default Permission Classes (can be overriden per view)
+    # Ensure permissions are checked by default
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        # Or start with stricter permissions:
+        # 'rest_framework.permissions.IsAuthenticated',
+    ],
+
     # --- Default Filtering Settings ---
     # Set default filtering backend for all views/viewsets
     'DEFAULT_FILTER_BACKEND': [
