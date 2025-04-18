@@ -20,7 +20,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
     # permission_classes: Define who can access this viewset.
     # IsAuthenticatedOrReadOnly allows anyone to view (GET, HEAD, OPTIONS)
     # but only authenticated users to perform write actions (POST, PUT, PATCH, DELETE).
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+
+    filter_backends = [DjangoFilterBackend]
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -33,7 +35,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     # admins to manage unavailable products - might need custom queryset logic later.
     queryset = Product.objects.filter(available=True).order_by('-created_at')
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # Use DjangoModelPermissionsOrAnonReadOnly for standard model permission checks
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+ 
 
    # --- Filtering Configuration ---
     # Specify the filter backends to use for this viewset.
