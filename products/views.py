@@ -1,11 +1,23 @@
-# Import DRF's generic views
 from rest_framework import viewsets, permissions
-# Import the filter backend
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet, RangeFilter
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
 
 
+# --- Custom FilterSet for Products ---
+# We define a custome FilterSet to enable more advanced filetering optins, like ranges.
+class ProductFilter(FilterSet):
+    # Define a filter for the 'price' field that allows range queries
+    # e.g., ?price_min=10.00&price_max=50.00
+    price = RangeFilter()
+
+    class Meta:
+        model = Product
+        # Specify the fields available for filtering
+        # 'price' uses the RangeFilter defined above.
+        # 'category' and 'available' will use default exact match lookups.
+        fields = ['category', 'available', 'price']
 
 # --- Category Viewset ---
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -13,16 +25,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
     API endpoint that allows categories to be viewed or edited.
     Provides list, create, retrieve, updata, partial_update, destroy actions automatically
     """
-    # queryset: Defines the set of objects this viewset will manage.
     queryset = Category.objects.all().order_by('name') # Get all categories, ordered by name
-    # serializer_class: Specifies the serializer to use for this viewset.
     serializer_class = CategorySerializer
     # permission_classes: Define who can access this viewset.
     # IsAuthenticatedOrReadOnly allows anyone to view (GET, HEAD, OPTIONS)
     # but only authenticated users to perform write actions (POST, PUT, PATCH, DELETE).
     permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
-
-    filter_backends = [DjangoFilterBackend]
+    # filter_backends = [DjangoFilterBackend]
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -39,21 +48,26 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
  
 
-   # --- Filtering Configuration ---
+   # --- Filtering & Search Configuration ---
     # Specify the filter backends to use for this viewset.
-    # We enable the DjangoFilterBackend we configured globally.
-    filter_backends = [DjangoFilterBackend]
-    # Specify which fields on the Product model can be used for filtering.
-    # This allows requests like /api/v1/products/?category=1 or /api/v1/products/?available=true
-    filterset_fields = [
-        'category',  # Filter by exact category ID
-        'available', # Filter by boolean available status
-        # We can add more fields later (e.g., price ranges, name search)
-        # by creating a custom FilterSet class.
-        ]
+    # We add SearchFilter alongside DjangoFilterBackend.
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+
+    # Use our custom FilterSet class for django-filter backend
+    filterset_class = ProductFilter
+    # Remove filterset_fields as filterset_class handles field definitions
+
+    # Specify the fields for the SearchFilter backend.
+    # Allows requests like /api/v1/products/?search=laptop
+    # It will search case-insensitively across name and description.
+    search_fields = [
+        'name',
+        'description',
+        # Can also search related fields like category name:
+        # 'category__name',
+    ]
+
+    
 
 
-    # We can add custom actions, filtering, pagination etc. here later.
-# Note: We are currently only creating read-only views (List and Retrieve).
-# We will use other generic views (Create, Update, Destroy) or ViewSets later
-# to handle creating, updating, and deleting products/categories via the API.
+  
