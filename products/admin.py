@@ -38,7 +38,7 @@ class ProductAdmin(admin.ModelAdmin):
     # Organizes fields in the detail/edit view
     fieldsets = (
         (None, {
-            'fields': ('category', 'name', 'slug', 'price', 'stock', 'available')
+            'fields': ('category', 'name',  'price', 'slug', 'stock', 'available')
         }),
         ('Description', {
             'fields': ('description',),
