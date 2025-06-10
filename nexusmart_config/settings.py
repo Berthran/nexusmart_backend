@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'drf_spectacular',
 
     # nexusmart apps
     'users.apps.UsersConfig',
@@ -193,9 +194,19 @@ REST_FRAMEWORK = {
         # The scope 'user' is used by UserRateThrottle.
         'user': '60/min' # Allow 60 requests per minute for authenticated users
         # Example alternative: '1000/day'
-    }
+    },
+    # --- Add Schema Generator Setting ---
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
-
+# --- drf-spectacular Settings ---
+# Customize the auto-generated OpenAPI schema
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'NexusMart API',
+    'DESCRIPTION': 'API documentation for the NexusMart E-commerce platform.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False, # Do not include schema view in root API view
+    # OTHER SETTINGS: https://drf-spectacular.readthedocs.io/en/latest/settings.html
 }
 
 # Optional: Configure Simple JWT settings (e.g., token lifetimes)
