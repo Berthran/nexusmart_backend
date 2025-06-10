@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # Third party apps
     'rest_framework',
+    'rest_framework_simplejwt',
     'django_filters',
 
     # nexusmart apps
@@ -189,4 +190,5 @@ REST_FRAMEWORK = {
 # instead of the default django.contrib.auth.models.User.
 # IMPORTANT: This MUST be set before running 'makemigrations' for the first time
 # for the 'users' app or any app with a ForeignKey to the User model.
+
 AUTH_USER_MODEL =  'users.User'
