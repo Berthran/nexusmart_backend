@@ -175,6 +175,27 @@ REST_FRAMEWORK = {
     # Sets the default number of items to include on each page.
     # Clients can potentially override this with a 'page_size' query parameter if allowed.
     'PAGE_SIZE': 10, # Show 10 items per page by default
+
+    # --- Default Throttling Settings ---
+    # Specify the default throttle classes to apply to all views.
+    'DEFAULT_THROTTLE_CLASSES': [
+        # Limits requests for anonymous users based on their IP address.
+        'rest_framework.throttling.AnonRateThrottle',
+        # Limits requests for authenticated users based on their user ID.
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    # Define the rates for the throttle scopes used by the classes above.
+    # Format: "number_of_requests / time_period"
+    # time_period can be 's' (second), 'min' (minute), 'hour', 'day'.
+    'DEFAULT_THROTTLE_RATES': {
+        # The scope 'anon' is used by AnonRateThrottle.
+        'anon': '20/min',  # Allow 20 requests per minute for anonymous users
+        # The scope 'user' is used by UserRateThrottle.
+        'user': '60/min' # Allow 60 requests per minute for authenticated users
+        # Example alternative: '1000/day'
+    }
+
+
 }
 
 # Optional: Configure Simple JWT settings (e.g., token lifetimes)
