@@ -142,10 +142,23 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# --- Caching Configuration ---
+# Read the cache URL from the environment variable set in docker-compose.yml
+# This setup makes it easy to switch to a different cache in production.
+CACHE_URL = os.environ.get('CACHE_URL', 'redis://localhost:6379/1')
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": CACHE_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 
 # --- Django REST Framework Settings ---
-
 REST_FRAMEWORK = {
     # --- Default Authenticationi Classes ---
     # Check for JWT first, then SessionAuth (for browsable API)
