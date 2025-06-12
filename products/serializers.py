@@ -37,24 +37,13 @@ class ProductSerializer(serializers.ModelSerializer):
     Serializer for the Product model.
     Includes nested Category details (read-only) and validation.
     """
-    # Nest the CategorySerializer for read operations.
-    # 'read_only=True' means for GET requests, the full category object (as defined
-    # by CategorySerializer) will be nested. For POST/PUT/PATCH requests, DRF will
-    # still expect a simple primary key (ID) for the category field in the input data.
-    # This avoids complex handling of nested writes for now.
     category= CategorySerializer(read_only=True)
-
-    # Add a write-only field that accepts the category ID during create/update
-    # 'source' links this field to the actual 'category' model field for saving.
-    # 'queryset' is needed for validation when using PrimaryKeyRelatedField for writes.
-    category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), source='category', write_only=True
-    )
+    category_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='category', write_only=True)
 
 
     class Meta:
         model = Product
-        # Specify the fields from the Product model to include.
+
         fields = [
             'id',           # Primary key
             'category',     # Read-only nested representation
@@ -65,11 +54,10 @@ class ProductSerializer(serializers.ModelSerializer):
             'price',
             'stock',
             'available',
+            'image',
             'created_at',
             'updated_at',
-            # 'image' field would be added here later
         ]
-        
         read_only_fields = ['slug', 'category']
 
     # --- Custom Validation Methods ---
