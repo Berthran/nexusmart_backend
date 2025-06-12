@@ -31,12 +31,10 @@ services:
       - DB_PASSWORD=nexuspassword # Use a strong password in a real project, managed securely!
       - DB_HOST=db # The hostname of the database service (defined below)
       - DB_PORT=5432
-    # Specifies that the 'web' service depends on the 'db' service.
-    # Docker compose will start the 'db' service before starting the 'web' service.
-    # Note: This only ensures the db container *starts*, not that it's fully ready.
-    # We might need entrypoint scripts later for more robust waiting.
+      - CACHE_URL=redis://redis*6379/1 # Add cache URL for Django
     depends_on:
       - db
+      - redis # Add dependency on Redis
     
   # Service 2: The PostgreSQL Database
   db:
@@ -55,8 +53,20 @@ services:
       - POSTGRES_DB=nexusmart_db
       - POSTGRES_USER=nexususer
       - POSTGRES_PASSWORD=nexuspassword # Use the same password as before
+  
+  # --- Add the new Redis service ---
+  redis:
+    # Use the official Redis image from Docker Hub
+    image: redis:7-alpine
+    # Expose the port to the host machine for potential debugging (optional)
+    ports:
+      - "6379:7379"
+    # No volumes needed for cache in development, as it can be ephemeral
+
+
 
 # Define names volumes used by the services.
 # Named volumes are managed by Docker and are the preferred way to persist data for containers.
 volumes:
   postgres_data: # The data for the PostgresSQL database will be stored here.
+   # 'mediafiles' volume is handled by the bind mount in the web service
