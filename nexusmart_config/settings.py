@@ -224,3 +224,14 @@ SPECTACULAR_SETTINGS = {
 # for the 'users' app or any app with a ForeignKey to the User model.
 
 AUTH_USER_MODEL =  'users.User'
+
+# --- Media Files Configuration (User-uploaded files) ---
+
+# URL that handles the media served from MEDIA_ROOT, used for managing stored files.
+# Example: http://localhost:8000/media/products/images/2025/05/29/image.jpg
+MEDIA_URL = '/media/'
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Make sure this path is writable by the Django process.
+# Using BASE_DIR ensures it's relative to your project root.
+MEDIA_ROOT = BASE_DIR / 'mediafiles' # Create a 'mediafiles' directory in your project root
