@@ -65,12 +65,21 @@ class Product(models.Model):
         help_text="Price of the product"
     )
     stock = models.PositiveIntegerField(default=0, help_text="Number of items currently in stock")
-    # Boolean field to easily filter available products
+    
     available = models.BooleanField(default=True, help_text="Is the product available for purchase?")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # We can add ImageField later: requires Pillow and MEDIA settings
-    # image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+    
+    # --- Add ImageField ---
+    # 'upload_to' specifies a subdirectory of MEDIA_ROOT to store uploaded images.
+    # '%Y/%m/%d/' will create subdirectories based on the upload date.
+    # 'blank=True, null=True' makes the image optional.
+    image = models.ImageField(
+        upload_to='products/images/%Y/%m/%d/',
+        blank=True,
+        null=True,
+        help_text="Optional image for the product"
+    )
 
     class Meta:
         # Optional: Default ordering for products
