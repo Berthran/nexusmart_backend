@@ -26,6 +26,9 @@ drf-spectacular>=0.27,<0.28
 # For ImageField support
 Pillow>=10.0,<11.0
 
+# For Caching with Redis
+django-redis>=5.4,<5.5
+
 # Add other dependencies below as needed, e.g.,
 # requests>=2.28,<3.0  # For making HTTP requests
 # celery>=5.3,<5.4     # For background tasks
