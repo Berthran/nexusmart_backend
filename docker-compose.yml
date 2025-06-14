@@ -31,7 +31,7 @@ services:
       - DB_PASSWORD=nexuspassword # Use a strong password in a real project, managed securely!
       - DB_HOST=db # The hostname of the database service (defined below)
       - DB_PORT=5432
-      - CACHE_URL=redis://redis*6379/1 # Add cache URL for Django
+      - CACHE_URL=redis://redis:6379/1 # Add cache URL for Django
     depends_on:
       - db
       - redis # Add dependency on Redis
@@ -60,7 +60,7 @@ services:
     image: redis:7-alpine
     # Expose the port to the host machine for potential debugging (optional)
     ports:
-      - "6379:7379"
+      - "6379:6379"
     # No volumes needed for cache in development, as it can be ephemeral
 
 
